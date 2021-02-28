@@ -13,7 +13,7 @@ import QuestionnaireDetail from '../components/Questionnaire/Detail/index';
 
 
 const App = ({urlWS}) =>{
-   const { isAuth, setUrlWs  } = useContext(Context);
+   const { isAuth, setUrlWs,wsError,invalidToken  } = useContext(Context);
    
    useEffect(() => {
     setUrlWs(urlWS);
@@ -21,7 +21,10 @@ const App = ({urlWS}) =>{
    
   
    return  (
-     <Layout>
+     <Layout
+       wsError={wsError}
+       invalidToken={invalidToken}
+     >
        <Router>
          <Home path="/" />
       

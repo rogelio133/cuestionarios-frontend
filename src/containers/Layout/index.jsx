@@ -1,15 +1,16 @@
-import React,{Fragment, useContext, useRef} from 'react'
-import { Link  } from '@reach/router';
+import React,{Fragment, useContext, useRef,useState} from 'react'
+import { Link,navigate  } from '@reach/router';
 import {Context} from '../../Context';
  
 import 'bulma/css/bulma.css';
 import './styles.css';
 
-const Layout = ({children}) =>{
+const Layout = (props) =>{
 
   const menuRef = useRef(null);
   const hamburguerMenuRef = useRef(null);
-  const { isAuth, removeAuth } = useContext(Context);
+  const { isAuth, removeAuth,setWsError,setInvalidToken } = useContext(Context);
+  const {wsError,invalidToken} = props;
 
   const handleMenuClick = () => {
     if(menuRef.current.classList.contains('is-active')){
@@ -21,6 +22,19 @@ const Layout = ({children}) =>{
       hamburguerMenuRef.current.classList.add('is-active');
     }
       
+  }
+
+  const handleRedirect = () => {
+    if(invalidToken) {
+      removeAuth();
+      setInvalidToken(false);
+      navigate('/login');
+    }
+    else {
+      setWsError(false);
+      navigate('/user');
+    }
+
   }
 
   return (
@@ -85,7 +99,7 @@ const Layout = ({children}) =>{
       </nav>
 
       <main className="p-5 has-background-info-light">
-        {children}
+        {props.children}
       </main>
     
       <footer className="p-5 has-background-info-dark is-justify-content-flex-end">
@@ -99,8 +113,28 @@ const Layout = ({children}) =>{
           </p>
         </div>
       </footer>
+      {
+        (wsError || invalidToken) && (
+        <div className="modal is-active">
+          <div className="modal-background" />
+          <div className="modal-card">
+            <header className="modal-card-head">
+              <p className="modal-card-title">Aviso</p>
+            </header>
+            <section className="modal-card-body">
+              { wsError ? "No se pudo procesar su solicitud, intente nuevamente" : "Su sesión ha expirado" }
+            </section>
+            <footer className="modal-card-foot">
+              <button type="button" onClick={handleRedirect} className="button is-success">Aceptar</button>
+            </footer>
+          </div>
+        </div>
+      )
+}
+      
+    
     </div>
     )
 
   }
-export default Layout
+export default Layout;

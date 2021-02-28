@@ -5,14 +5,19 @@ export const Context = createContext();
 const Provider = ({ children }) => {
   const [isAuth, setIsAuth] = useState(() => window.sessionStorage.getItem('token'));
   const [urlWs, setUrlWs] = useState('');
+  const [wsError, setWsError] = useState(false);
+  const [invalidToken, setInvalidToken] = useState(false);
 
   const value = {
     urlWs,
     setUrlWs,
     isAuth,
-    activateAuth: token => {
-       setIsAuth(true)
-       window.sessionStorage.setItem('token',JSON.stringify( token))
+
+    wsError,invalidToken,
+    setWsError,setInvalidToken,
+    activateAuth: info => {
+       setIsAuth(true);
+       window.sessionStorage.setItem('token',JSON.stringify( info))
     },
     removeAuth: () => {
       setIsAuth(false)

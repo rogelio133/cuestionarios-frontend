@@ -1,12 +1,15 @@
 import React,{useState,useRef} from 'react'
 import {navigate } from '@reach/router';
-import {ListOfQuestions} from '../ListOfQuestions/index'
+import {ListOfQuestions} from '../ListOfQuestions/index';
+import useAPI from '../../../hooks/useAPI';
 
 const NewQuestionary = () => {
   
   const questionaryRef = useRef('');
   const questionRef = useRef('');
   const optionRef = useRef('');
+
+  const {wsSaveQuestionnaire} = useAPI();
 
   const [state,setState] = useState({
     options : [],
@@ -30,14 +33,14 @@ const NewQuestionary = () => {
       // jeje
     }
     else {
-      const max = state.options.length== 0 ? null : state.options.reduce((prev, current) => (prev.id > current.id) ? prev : current);
-      const id = max == null ? 1 : (max.id+1);
+      const max = state.options.length== 0 ? null : state.options.reduce((prev, current) => (prev.ID > current.ID) ? prev : current);
+      const ID = max == null ? 1 : (max.ID+1);
   
   
       const options = [...state.options,{
-        id,
-        name : optionRef.current.value,
-        correct :false 
+        ID,
+        Name : optionRef.current.value,
+        Correct :false 
       }];
   
       setState({
@@ -79,13 +82,13 @@ const NewQuestionary = () => {
     if(_QuestionOK && !_OptionsOK) {
 
 
-      const max = state.questions.length== 0 ? null : state.questions.reduce((prev, current) => (prev.id > current.id) ? prev : current);
-      const id = max == null ? 1 : (max.id+1);
+      const max = state.questions.length== 0 ? null : state.questions.reduce((prev, current) => (prev.ID > current.ID) ? prev : current);
+      const ID = max == null ? 1 : (max.ID+1);
 
       const questions = [...state.questions,{
-        id,
-        name : questionRef.current.value,
-        options : state.options 
+        ID,
+        Name : questionRef.current.value,
+        Options : state.options 
       }];
 
       setState({...state,
@@ -119,7 +122,7 @@ const NewQuestionary = () => {
     }
   }
 
-  const confirmQuestionary = () =>{
+  const confirmQuestionnaire = () =>{
     let _QuestionaryOK =  true;
     let _QuestionOK = '';
 
@@ -142,7 +145,7 @@ const NewQuestionary = () => {
     const {options} = state;
 
     options.forEach(o => {
-      o.correct = o.id == option.id;
+      o.correct = o.ID == option.ID;
     });
 
     setState({
@@ -156,7 +159,7 @@ const NewQuestionary = () => {
   const removeOption = (event,id)=>{
     
     event.stopPropagation();
-    const options = state.options.filter(option=> option.id != id);
+    const options = state.options.filter(option=> option.ID != id);
     setState({
       ...state,
       options,
@@ -166,23 +169,29 @@ const NewQuestionary = () => {
 
   const removeQuestion = (id)=>{
     
-    const questions = state.questions.filter(question=> question.id != id);
+    const questions = state.questions.filter(question=> question.ID != id);
     setState({
       ...state,
       questions
     });
   }
 
-  const saveQuestionary = () =>{
-    setState({...state, modalIsSaving: true});  
+  const saveQuestionnaire = async () =>{
+    setState({...state, modalIsSaving: true}); 
 
-    setTimeout(() => {
-      const id= 133;
-      navigate(`/user/questionnaires/${id}`);
+    const questionnaire ={
+      Name : questionaryRef.current.value,
+      Questions : state.questions
+    };
 
-    }, 2000);
-    
+    const data = await wsSaveQuestionnaire(questionnaire);
+
+    setState({...state,modalActive: false});
+    if(data) {
+      navigate(`/user/questionnaires/detail/${data.questionnaireID}`);
+    }
   }
+
 
   return (
   
@@ -202,7 +211,7 @@ const NewQuestionary = () => {
           <p className="control">
             <a 
               className="button is-success"
-              onClick={confirmQuestionary}
+              onClick={confirmQuestionnaire}
             >
               Guardar
             </a>
@@ -259,12 +268,12 @@ const NewQuestionary = () => {
 
               {
                 state.options.map((option,index)=>(
-                  <article className={`message ${option.correct ? "is-success" : "is-info" }`} key={option.id} onClick={()=>setCorrectOption(option)}>
+                  <article className={`message ${option.correct ? "is-success" : "is-info" }`} key={option.ID} onClick={()=>setCorrectOption(option)}>
                     <div className="message-header">
                       <p>
-                        {`${getOptionLetter(index)} ) ${option.name}`}
+                        {`${getOptionLetter(index)} ) ${option.Name}`}
                       </p> 
-                      <button type="button" className="delete" aria-label="delete" onClick={(e)=> removeOption(e,option.id)} />
+                      <button type="button" className="delete" aria-label="delete" onClick={(e)=> removeOption(e,option.ID)} />
                     </div>
                   </article>
                   
@@ -296,11 +305,10 @@ const NewQuestionary = () => {
             <section className="modal-card-body">
               ¿Desea guardar este cuestionario?
               <br />
-             
               Si continua no podrá modificar las preguntas registradas
             </section>
             <footer className="modal-card-foot">
-              <button type="button" onClick={saveQuestionary} className={`button is-success ${state.modalIsSaving && "is-loading"}`}>Aceptar</button>
+              <button type="button" onClick={saveQuestionnaire} className={`button is-success ${state.modalIsSaving && "is-loading"}`}>Aceptar</button>
               <button type="button" className="button" onClick={closeModal} disabled={state.modalIsSaving}>Cancelar</button>
             </footer>
           </div>

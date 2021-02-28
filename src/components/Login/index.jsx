@@ -58,20 +58,16 @@ const Login = () => {
 
       try {
         const respuesta = await wsValidateLogin(user,password);
-        const { d: { success, message, data } } = respuesta;
+        const { d: { Success, Message, Data } } = respuesta;
         
-        if (!success) {
-            throw new Error(message);
+        if (!Success) {
+            throw new Error(Message);
         }
         else {
-          console.log(data);
-            
-          activateAuth(data);
-           
+          activateAuth(Data);
         }
     } catch (error) {
       setState({...state,loading: false,formError:error.message});
-      // MostrarError(error);
     }
 
 
