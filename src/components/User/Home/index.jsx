@@ -13,12 +13,14 @@ return(
   <>
     <h1 className="title is-1">{`Hola ${name}`}</h1>
     <div className="block">
-      <button className="button is-success">
+
+      <Link className="button is-success" to="/user/questionnaires">
         <span className="icon is-small">
           <i className="fas fa-list" />
         </span>
         <span>Mis cuestionarios</span>
-      </button>
+      </Link>
+
     </div>
     <div className="block">
       <Link className="button is-info" to="/user/questionnaires/new">

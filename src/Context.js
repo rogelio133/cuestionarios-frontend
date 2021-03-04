@@ -2,15 +2,13 @@ import React, { createContext, useState } from 'react';
 
 export const Context = createContext();
 
-const Provider = ({ children }) => {
+const Provider = ({ children,urlWS }) => {
   const [isAuth, setIsAuth] = useState(() => window.sessionStorage.getItem('token'));
-  const [urlWs, setUrlWs] = useState('');
   const [wsError, setWsError] = useState(false);
   const [invalidToken, setInvalidToken] = useState(false);
 
   const value = {
-    urlWs,
-    setUrlWs,
+    urlWs : urlWS,
     isAuth,
 
     wsError,invalidToken,

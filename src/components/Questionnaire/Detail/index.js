@@ -1,17 +1,16 @@
 import React, { Fragment ,useEffect, useState} from 'react';
 import { Link  } from '@reach/router';
 import {ListOfQuestions} from '../ListOfQuestions/index';
-
-import  sessionInfos  from '../../../sessionInfo';
-
- 
+import useAPI from '../../../hooks/useAPI';
 
 const QuestionnaireDetail = ({ detailId }) => {
+
+  const {wsGetQuestionnaire} = useAPI();
 
     const [questionnaire, setQuestinnaire] = useState({
         id: 0,
         name : '',
-        options : []
+        Questions : []
     });
 
     const [tabs, setTabs] = useState([
@@ -21,32 +20,29 @@ const QuestionnaireDetail = ({ detailId }) => {
         {id:4,icon:'chart-pie', title:'Estadisticas', active: false},
     ]);
 
-    const questions = [
-      {id: 1,name : 'Pregunta 1',options : [{id : 1,name : 'opcion A',correct :true},{id : 2,name : 'opcion B',correct :false}] },
-      {id: 2,name : 'Pregunta 2',options : [{id : 1,name : 'opcion Y',correct :false},{id : 2,name : 'opcion Z',correct :true}] }
-    ];
+   
+
+    const tabCodigo= (
+      <div>
+        <h4 className="title is-4 has-text-centered">Comparte el siguiente codigo a las personas que quieras que contesten el cuestionario</h4>
+        <h1 className="title is-1 has-text-centered">{questionnaire.Code}</h1>
+      </div>
+    );
 
     const getActiveTabContent = ()=> {
         if(tabs[0].active)
             return tabCodigo;
         if(tabs[1].active)
-          return <ListOfQuestions questions={questions} />
+          return <ListOfQuestions questions={questionnaire.Questions} />
 
         return <div>aun no esta</div>
     }
 
-    const tabCodigo= (
-      <div>
-        <h4 className="title is-4 has-text-centered">Comparte el siguiente codigo a las personas que quieras que contesten el cuestionario</h4>
-        <h1 className="title is-1 has-text-centered">{questionnaire.code}</h1>
-      </div>
-    );
+  
 
     useEffect(() => {
-        
-        getQuestionnaire(detailId);
-
-      },[]);
+      GetQuestionnaire();
+    },[]);
 
       const handleTabSelected = (tab) => {
         const _tabs = Object.create(tabs);
@@ -59,19 +55,14 @@ const QuestionnaireDetail = ({ detailId }) => {
         setTabs(_tabs);
       }
 
-    const getQuestionnaire = ()=> {
-         const data = {
-            id: 0, 
-            name : 'Test React',
-            code : '515666',
-            options : [] 
-         };
-         setQuestinnaire(data);
-    }
+      const GetQuestionnaire = async() => {
+        const questionnaire = await wsGetQuestionnaire(detailId);
+        setQuestinnaire(questionnaire);
+      }
 
 return(
   <>
-    <h1 className="title is-1">{questionnaire.name}</h1>
+    <h1 className="title is-1">{questionnaire.Name}</h1>
     <div className="tabs is-centered is-toggle is-fullwidth ">
       <ul>
         {
