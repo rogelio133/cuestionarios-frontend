@@ -18,14 +18,13 @@ const Form = () => {
         questionnaire : null,
         answers: [],
         
-        
         searchingCode : false,
         optionSelected : false,
+        lastQuestion : false,
         selectedOptionID : null,
         
         errorCode : false,
         errorName : false,
-        
         
         step: _stepValidatingCode
     });
@@ -68,9 +67,6 @@ const Form = () => {
     }
 
     const handleOptionSelected = (optionID) => {
-        
-
-        console.log("id opcion seleccionada",optionID);
 
         setState({...state,
             optionSelected: true,
@@ -78,18 +74,27 @@ const Form = () => {
         });
     }
 
+    const handleSendAnswers = () => {
+      const  answer = {ID : currentQuestion.ID, SelectedOption: state.selectedOptionID}; 
+
+       const allAnswers = [...state.answers,answer];
+
+      console.log(allAnswers);
+
+    }
+
     const handleSetNextQuestion = () => {
         questionIndex++;
-
-        const answer = {ID : currentQuestion.ID, SelectedOption: state.selectedOptionID}; 
-        
         setCurrentQuestion(state.questionnaire.Questions[questionIndex]);
 
+        const  answer = {ID : currentQuestion.ID, SelectedOption: state.selectedOptionID}; 
         
-
+        const lastQuestion = (questionIndex + 1) == state.questionnaire.Questions.length;
+        
         setState({...state,
             optionSelected: false,
-            answers : {...state.answers,answer}
+            answers : [...state.answers,answer],
+            lastQuestion
         });
     }
 
@@ -156,7 +161,6 @@ return(
             </button>
           </div>
         </>
-            
       )
     }
     {
@@ -170,16 +174,30 @@ return(
             handleOptionSelected={handleOptionSelected}
             question={currentQuestion}
           />
-       
-          <button 
-            type="button"  
-            className="button is-info is-large"
-            disabled={!state.optionSelected}
-            onClick={handleSetNextQuestion}
-          >
-            Siguiente
-          </button>
-
+          {
+            !state.lastQuestion && (
+            <button 
+              type="button"  
+              className="button is-info is-large"
+              disabled={!state.optionSelected}
+              onClick={handleSetNextQuestion}
+            >
+              Siguiente
+            </button>
+            )
+          }
+          {
+            state.lastQuestion && (
+            <button 
+              type="button"  
+              className="button is-info is-large"
+              disabled={!state.optionSelected}
+              onClick={handleSendAnswers}
+            >
+              Enviar
+            </button>
+            )
+          }
         </div>
       )
     } 
