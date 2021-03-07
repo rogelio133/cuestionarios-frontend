@@ -4,24 +4,29 @@ import useAPI from '../../../hooks/useAPI';
 import Question from '../Question/index';
 
 
+
 const Form = () => {
 
     const _stepValidatingCode = 1;
     const _stepGettingUserData=2;
     const _stepAnswering = 3;
+    const _stepAnswersSaved = 4;
+    const _stepErrorSaving = 5;
 
-    let questionIndex = 0;
-
-    const {wsValidateCode} = useAPI();
+    
+    const {wsValidateCode,wsSaveQuestionnaireAnswer} = useAPI();
 
     const [state,setState] = useState({
         questionnaire : null,
         answers: [],
         
         searchingCode : false,
+        saving : false,
         optionSelected : false,
         lastQuestion : false,
         selectedOptionID : null,
+        questionIndex:0,
+        name : '',
         
         errorCode : false,
         errorName : false,
@@ -36,12 +41,13 @@ const Form = () => {
   
     const handleGettingUserData = () =>{
         
-        setCurrentQuestion(state.questionnaire.Questions[questionIndex]);
+        setCurrentQuestion(state.questionnaire.Questions[state.questionIndex]);
         
         setState({
             ...state, 
             searchingCode : false,
             errorName : !nameRef.current.value,
+            name : nameRef.current.value,
             step :  nameRef.current.value ? _stepAnswering : _stepGettingUserData,
         });
         
@@ -74,28 +80,48 @@ const Form = () => {
         });
     }
 
-    const handleSendAnswers = () => {
-      const  answer = {ID : currentQuestion.ID, SelectedOption: state.selectedOptionID}; 
+    const handleSendAnswers = async() => {
+      const  answer = {IDQuestion : currentQuestion.ID, IDOptionSelected: state.selectedOptionID}; 
 
        const allAnswers = [...state.answers,answer];
 
-      console.log(allAnswers);
+       
+      const questionnaireAnswer = {
+        Name : state.name,
+        Answers : allAnswers
+      };
+
+      setState({ ...state, 
+        questionIndex : state.questionIndex+1,
+        saving : true
+      });
+      const saved = await wsSaveQuestionnaireAnswer(questionnaireAnswer);
+        
+      setState({
+          ...state, 
+          saving : false,
+          step :  saved ? _stepAnswersSaved : _stepErrorSaving,
+      });
 
     }
 
     const handleSetNextQuestion = () => {
-        questionIndex++;
-        setCurrentQuestion(state.questionnaire.Questions[questionIndex]);
+     
+        setCurrentQuestion(state.questionnaire.Questions[state.questionIndex+1]);
 
-        const  answer = {ID : currentQuestion.ID, SelectedOption: state.selectedOptionID}; 
+        const  answer = {IDQuestion : currentQuestion.ID, IDOptionSelected: state.selectedOptionID}; 
         
-        const lastQuestion = (questionIndex + 1) == state.questionnaire.Questions.length;
+        const lastQuestion = (state.questionIndex+1) == state.questionnaire.Questions.length-1;
+        
         
         setState({...state,
+            questionIndex : state.questionIndex+1,
             optionSelected: false,
             answers : [...state.answers,answer],
             lastQuestion
         });
+
+
     }
 
 return(
@@ -165,10 +191,13 @@ return(
     }
     {
         state.step == _stepAnswering && (
-        <div>
+        <>
           <h2 className="title is-2">
             {state.questionnaire.Name}
           </h2>
+
+          <label>{`${state.questionIndex+1 == state.questionnaire.Questions.length  ? state.questionnaire.Questions.length : state.questionIndex+1 } / ${state.questionnaire.Questions.length}`}</label>
+          <progress className="progress is-link" value={state.questionIndex+1} max={state.questionnaire.Questions.length} />
 
           <Question 
             handleOptionSelected={handleOptionSelected}
@@ -190,7 +219,7 @@ return(
             state.lastQuestion && (
             <button 
               type="button"  
-              className="button is-info is-large"
+              className={`button is-success is-large ${state.saving && 'is-loading'}`} 
               disabled={!state.optionSelected}
               onClick={handleSendAnswers}
             >
@@ -198,9 +227,17 @@ return(
             </button>
             )
           }
-        </div>
+        </>
       )
-    } 
+    }
+    {
+       state.step == _stepAnswersSaved &&
+       <div>se guardó todo</div>
+    }
+    {
+       state.step == _stepErrorSaving &&
+       <div>error al guardar</div>
+    }  
   </>
     )
   }

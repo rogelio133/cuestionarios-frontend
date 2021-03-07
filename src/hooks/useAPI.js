@@ -111,6 +111,29 @@ const useAPI = () =>{
         return info;
     }
 
+    const wsSaveQuestionnaireAnswer = async (answer) => {
+        let info = null;
+        try {
+      
+            const parameters = {answer};
+            const respuesta = await callMethod('SaveQuestionnaireAnswer', parameters,true);
+            const { d: { Success, Message } } = respuesta;
+      
+            if (!Success) {
+                throw new Error(Message);
+            }
+           
+            else {
+                info=  true;
+            }
+            
+        } catch (error) {
+          console.error(error);
+        }
+
+        return info;
+    }
+
     const wsValidateCode = async (code) => {
         let info = null;
         try {
@@ -143,10 +166,12 @@ const useAPI = () =>{
     }
 
     return {
-        wsSaveQuestionnaire,
+       
         wsGetQuestionnaire,
         wsGetQuestionnaireByToken,
         wsGetQuestionnaires,
+        wsSaveQuestionnaire,
+        wsSaveQuestionnaireAnswer,
         wsValidateCode
     };
 

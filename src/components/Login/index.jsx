@@ -90,7 +90,7 @@ const Login = () => {
               <div className="field">
                 <label className="label">Email</label>
                 <div className="control">
-                  <input className={`input ${state.usernameError && 'is-danger'}`} type="email" disabled={state.loading} ref={usernameRef}  />
+                  <input className={`input ${state.usernameError && 'is-danger'}`} type="email" disabled={state.loading} ref={usernameRef} defaultValue="rogelio_133@outlook.com"  />
                 </div>
                 { state.usernameError && <p className="help is-danger">{ state.usernameError}</p>}
               </div>
@@ -98,7 +98,7 @@ const Login = () => {
               <div className="field">
                 <label className="label">Password</label>
                 <div className="control">
-                  <input className={`input ${state.passwordError && 'is-danger'}`} type="password" disabled={state.loading} ref={passwordRef}  />
+                  <input className={`input ${state.passwordError && 'is-danger'}`} type="password" disabled={state.loading} ref={passwordRef} defaultValue="123"  />
                 </div>
                 { state.passwordError && <p className="help is-danger">{ state.passwordError}</p>}
               </div>

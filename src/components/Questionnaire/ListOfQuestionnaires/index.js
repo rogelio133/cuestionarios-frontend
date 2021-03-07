@@ -17,7 +17,8 @@ const ListOfQuestionnaires = () => {
 
       const GetQuestionnaires = async() => {
         const questionnaires = await wsGetQuestionnaires();
-        setQuestinnaires(questionnaires);
+        if(questionnaires)
+          setQuestinnaires(questionnaires);
       }
 
 return(
