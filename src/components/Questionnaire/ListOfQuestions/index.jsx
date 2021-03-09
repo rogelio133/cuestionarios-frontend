@@ -24,12 +24,12 @@ export const ListOfQuestions = (props) =>{
       <div className="message-body">
         {
               props.questions.map((question,indexQ)=>(
-                <article className="message is-info" key={question.ID}>
+                <article className="message is-info" key={question.IDQuestion}>
                   <div className="message-header">
                     {`${indexQ+1}.- ${question.Name}`}
                     {
                       props.handlerRemoveQuestion && 
-                      <button className="delete" type="button" onClick={()=> props.handlerRemoveQuestion(question.ID)} />
+                      <button className="delete" type="button" onClick={()=> props.handlerRemoveQuestion(question.IDQuestion)} />
                     }
                       
                   </div>
@@ -38,7 +38,7 @@ export const ListOfQuestions = (props) =>{
                     <ul>
                       {
                         question.Options.map((option,indexO)=>(
-                          <li key={option.ID}>
+                          <li key={option.IDOption}>
                             <p className={`${option.Correct && "label"}`}>
                               {`${getOptionLetter(indexO)}) ${option.Name}`}
                             </p>

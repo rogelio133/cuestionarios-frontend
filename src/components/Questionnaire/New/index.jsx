@@ -33,12 +33,12 @@ const NewQuestionary = () => {
       // jeje
     }
     else {
-      const max = state.options.length== 0 ? null : state.options.reduce((prev, current) => (prev.ID > current.ID) ? prev : current);
-      const ID = max == null ? 1 : (max.ID+1);
+      const max = state.options.length== 0 ? null : state.options.reduce((prev, current) => (prev.IDOption > current.IDOption) ? prev : current);
+      const IDOption = max == null ? 1 : (max.IDOption+1);
   
   
       const options = [...state.options,{
-        ID,
+        IDOption,
         Name : optionRef.current.value,
         Correct :false 
       }];
@@ -64,7 +64,7 @@ const NewQuestionary = () => {
     if(state.options.length<3){
       _OptionsOK = 'Debe de especificar 3 opciones';
     }
-    else if(state.options.filter(o=> o.correct).length==0){
+    else if(state.options.filter(o=> o.Correct).length==0){
       _OptionsOK = 'Debe de especificar la opción correcta';
     }
 
@@ -82,11 +82,11 @@ const NewQuestionary = () => {
     if(_QuestionOK && !_OptionsOK) {
 
 
-      const max = state.questions.length== 0 ? null : state.questions.reduce((prev, current) => (prev.ID > current.ID) ? prev : current);
-      const ID = max == null ? 1 : (max.ID+1);
+      const max = state.questions.length== 0 ? null : state.questions.reduce((prev, current) => (prev.IDQuestion > current.IDQuestion) ? prev : current);
+      const IDQuestion = max == null ? 1 : (max.IDQuestion+1);
 
       const questions = [...state.questions,{
-        ID,
+        IDQuestion,
         Name : questionRef.current.value,
         Options : state.options 
       }];
@@ -145,7 +145,7 @@ const NewQuestionary = () => {
     const {options} = state;
 
     options.forEach(o => {
-      o.correct = o.ID == option.ID;
+      o.Correct = o.IDOption == option.IDOption;
     });
 
     setState({
@@ -159,7 +159,7 @@ const NewQuestionary = () => {
   const removeOption = (event,id)=>{
     
     event.stopPropagation();
-    const options = state.options.filter(option=> option.ID != id);
+    const options = state.options.filter(option=> option.IDOption != id);
     setState({
       ...state,
       options,
@@ -169,7 +169,7 @@ const NewQuestionary = () => {
 
   const removeQuestion = (id)=>{
     
-    const questions = state.questions.filter(question=> question.ID != id);
+    const questions = state.questions.filter(question=> question.IDQuestion != id);
     setState({
       ...state,
       questions
@@ -268,12 +268,12 @@ const NewQuestionary = () => {
 
               {
                 state.options.map((option,index)=>(
-                  <article className={`message ${option.correct ? "is-success" : "is-info" }`} key={option.ID} onClick={()=>setCorrectOption(option)}>
+                  <article className={`message ${option.Correct ? "is-success" : "is-info" }`} key={option.IDOption} onClick={()=>setCorrectOption(option)}>
                     <div className="message-header">
                       <p>
                         {`${getOptionLetter(index)} ) ${option.Name}`}
                       </p> 
-                      <button type="button" className="delete" aria-label="delete" onClick={(e)=> removeOption(e,option.ID)} />
+                      <button type="button" className="delete" aria-label="delete" onClick={(e)=> removeOption(e,option.IDOption)} />
                     </div>
                   </article>
                   
