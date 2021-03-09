@@ -1,5 +1,6 @@
 import React, { Fragment ,useEffect, useState} from 'react';
 import { Link  } from '@reach/router';
+import NProgress from 'nprogress';
 import useAPI from '../../../hooks/useAPI';
 
 
@@ -16,9 +17,13 @@ const ListOfQuestionnaires = () => {
    
 
       const GetQuestionnaires = async() => {
+        NProgress.configure({ showSpinner: false });
+        NProgress.start();
         const questionnaires = await wsGetQuestionnaires();
+        NProgress.done();
         if(questionnaires)
           setQuestinnaires(questionnaires);
+
       }
 
 return(
@@ -37,12 +42,12 @@ return(
       <tbody>
         {
           questionnaires.map((q,index)=>(
-            <tr key={q.ID}>
-              <th>{index+1}</th>
-              <td><Link to={`/user/questionnaires/detail/${q.ID}`}>{q.Name}</Link></td>
-              <td>{q.Code}</td>
-              <td>{q.NoQuestions}</td>
-              <td>0</td>
+            <tr key={q.Code}>
+              <th className="has-text-right">{index+1}</th>
+              <td><Link to={`/user/questionnaires/detail/${q.Code}`}>{q.Name}</Link></td>
+              <td className="has-text-center">{q.Code}</td>
+              <td className="has-text-right">{q.NoQuestions}</td>
+              <td className="has-text-right">0</td>
             </tr>
           ))
         }

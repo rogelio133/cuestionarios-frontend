@@ -202,7 +202,7 @@ const NewQuestionary = () => {
       <div className="box">
         <div className="field is-grouped">
           <div className="control is-expanded">
-            <input type="text" className={`input ${state.errorQuestionary && "is-danger"}`} ref={questionaryRef} placeholder="Nombre del cuestionario"  />
+            <input type="text" className={`input ${state.errorQuestionary && "is-danger"}`} ref={questionaryRef} placeholder="Nombre del cuestionario" maxLength={50}  />
             {
                   state.errorQuestionary &&
                   <p className="help is-danger">Requerido</p>
