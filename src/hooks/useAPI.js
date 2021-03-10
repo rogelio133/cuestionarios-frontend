@@ -8,11 +8,10 @@ const useAPI = () =>{
     const { urlWs,setWsError,setInvalidToken } = useContext(Context);
 
 
-    const wsGetQuestionnaire = async (id) => {
+    const wsGetQuestionnaire = async (code) => {
         let info = null;
         try {
-            id = parseInt(id);
-            const parameters = { id};
+            const parameters = { code };
             const respuesta = await callMethod('GetQuestionnaire', parameters);
             const { d: { Success, Message,Data,TokenOK } } = respuesta;
       

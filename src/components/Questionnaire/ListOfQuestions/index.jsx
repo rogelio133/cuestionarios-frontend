@@ -12,6 +12,7 @@ export const ListOfQuestions = (props) =>{
   }
   
   return (
+    
     <article className="message">
       {
         props.handlerRemoveQuestion && (

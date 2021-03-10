@@ -1,5 +1,6 @@
 import React, { Fragment ,useEffect, useState} from 'react';
 import { Link  } from '@reach/router';
+import NProgress from 'nprogress';
 import {ListOfQuestions} from '../ListOfQuestions/index';
 import useAPI from '../../../hooks/useAPI';
 
@@ -56,13 +57,16 @@ const QuestionnaireDetail = ({ detailId }) => {
       }
 
       const GetQuestionnaire = async() => {
+        NProgress.configure({ showSpinner: false });
+        NProgress.start();
         const questionnaire = await wsGetQuestionnaire(detailId);
+        NProgress.done();
         setQuestinnaire(questionnaire);
       }
 
 return(
   <>
-    <h1 className="title is-1">{questionnaire.Name}</h1>
+    <h2 className="title is-2">{questionnaire.Name}</h2>
     <div className="tabs is-centered is-toggle is-fullwidth ">
       <ul>
         {

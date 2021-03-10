@@ -192,9 +192,9 @@ return(
     {
         state.step == _stepAnswering && (
         <>
-          <h2 className="title is-2">
+          <h3 className="title is-3">
             {state.questionnaire.Name}
-          </h2>
+          </h3>
 
           <label>{`${state.questionIndex+1 == state.questionnaire.Questions.length  ? state.questionnaire.Questions.length : state.questionIndex+1 } / ${state.questionnaire.Questions.length}`}</label>
           <progress className="progress is-link" value={state.questionIndex+1} max={state.questionnaire.Questions.length} />
