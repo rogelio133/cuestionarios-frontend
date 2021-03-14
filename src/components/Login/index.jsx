@@ -1,20 +1,16 @@
-import React, { Fragment,useState, useRef,useContext  } from 'react';
+import React, { useState, useRef,useContext  } from 'react';
 import { Link } from '@reach/router';
-import {rulesEmail,rulesEmpty,fetchData} from '../../utils';
+import {rulesEmail,rulesEmpty} from '../../utils';
 import {Context} from '../../Context';
-
+import useAPI from '../../hooks/useAPI';
 
 const Login = () => {
-    const { activateAuth,urlWs } = useContext(Context)
+    const { activateAuth } = useContext(Context);
 
-    const [state, setState] = useState({
+    const {wsValidateLogin} = useAPI();
 
-        loading : false,
-
-        usernameError:'',
-        passwordError : '',
-        formError:''
-    });
+    const [loading, setLoading] = useState(false);
+    const [state, setState] = useState({usernameError:'',passwordError : '',formError:''});
 
     const usernameRef = useRef('');
     const passwordRef = useRef('');
@@ -30,7 +26,7 @@ const Login = () => {
         if(rulesEmpty(username)) {
           usernameError= 'Requerido';
         }
-        else  if(!rulesEmail(username)) {
+        else if(!rulesEmail(username)) {
           usernameError= 'Formato de email incorrecto';
         }
         if(rulesEmpty(password)) {
@@ -39,46 +35,31 @@ const Login = () => {
         
         const formOK = !usernameError && !passwordError;
 
-        setState({...state, 
-          loading: formOK,
-          usernameError,
-          passwordError,
-          formError : ''
-        });
+        setState({ usernameError,passwordError,formError : ''});
 
         if(formOK) {
-
           ValidateLogin(username,password);
-          
         }
 
     }
 
     const ValidateLogin= async (user, password) => {
+      
+        setLoading(true);
+        const response = await wsValidateLogin(user,password);
+        setLoading(false);
 
-      try {
-        const respuesta = await wsValidateLogin(user,password);
-        const { d: { Success, Message, Data } } = respuesta;
-        
-        if (!Success) {
-            throw new Error(Message);
+        if(!response) {
+          setState((prevState)=> ({...prevState,formError:'No se pudo procesar su solicitud.'})); 
+          return;
         }
-        else {
-          activateAuth(Data);
+        if(!response.d.Success) {
+          setState((prevState)=> ({...prevState,formError:response.d.Message})); 
+          return;
         }
-    } catch (error) {
-      setState({...state,loading: false,formError:error.message});
+        activateAuth(response.d.Data);
     }
 
-
-
-    }
-
-    const wsValidateLogin = async (user, password) => {
-      const parameters = { user, password };
-      const respuesta = await fetchData(`${urlWs}ValidateLogin`, parameters);
-      return respuesta;
-    }
 
     return (
       <>
@@ -90,7 +71,7 @@ const Login = () => {
               <div className="field">
                 <label className="label">Email</label>
                 <div className="control">
-                  <input className={`input ${state.usernameError && 'is-danger'}`} type="email" disabled={state.loading} ref={usernameRef} defaultValue="rogelio_133@outlook.com"  />
+                  <input className={`input ${state.usernameError && 'is-danger'}`} type="email" disabled={loading} ref={usernameRef} defaultValue="rogelio_133@outlook.com"  />
                 </div>
                 { state.usernameError && <p className="help is-danger">{ state.usernameError}</p>}
               </div>
@@ -98,14 +79,14 @@ const Login = () => {
               <div className="field">
                 <label className="label">Password</label>
                 <div className="control">
-                  <input className={`input ${state.passwordError && 'is-danger'}`} type="password" disabled={state.loading} ref={passwordRef} defaultValue="123"  />
+                  <input className={`input ${state.passwordError && 'is-danger'}`} type="password" disabled={loading} ref={passwordRef} defaultValue="123"  />
                 </div>
                 { state.passwordError && <p className="help is-danger">{ state.passwordError}</p>}
               </div>
 
               <button 
                 type="button" 
-                className={`button is-primary is-fullwidth ${state.loading && 'is-loading'}`}
+                className={`button is-primary is-fullwidth ${loading && 'is-loading'}`}
                 onClick={validateForm}
               >
                 <strong>Acceder</strong>

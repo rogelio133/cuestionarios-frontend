@@ -29,7 +29,7 @@ const ListOfQuestionnaires = () => {
 return(
   <>
     <h1 className="title is-1">Mis cuestionarios</h1>
-    <table className="table is-hoverable is-striped is-fullwidth">
+    <table className="table is-hoverable is-striped is-fullwidth is-bordered">
       <thead>
         <tr>
           <th>#</th>
@@ -45,7 +45,7 @@ return(
             <tr key={q.Code}>
               <th className="has-text-right">{index+1}</th>
               <td><Link to={`/user/questionnaires/detail/${q.Code}`}>{q.Name}</Link></td>
-              <td className="has-text-center">{q.Code}</td>
+              <td className="has-text-centered">{q.Code}</td>
               <td className="has-text-right">{q.NoQuestions}</td>
               <td className="has-text-right">0</td>
             </tr>

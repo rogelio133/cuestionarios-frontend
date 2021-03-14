@@ -4,7 +4,7 @@ export const Context = createContext();
 
 const Provider = ({ children,urlWS }) => {
   const [isAuth, setIsAuth] = useState(() => window.sessionStorage.getItem('token'));
-  const [wsError, setWsError] = useState(false);
+  const [wsError, setWsError] = useState('');
   const [invalidToken, setInvalidToken] = useState(false);
 
   const value = {

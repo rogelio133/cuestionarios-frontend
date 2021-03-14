@@ -28,13 +28,12 @@ const Question = (props) => {
     return (
       <div className="box">
         <h4 className="title is-4">
-          {props.question.Name}
-
+          {`${props.number}.- ${props.question.Name}`}
         </h4>
         {
          props.question.Options.map((option)=>(
            <div 
-             className={`notification p-2 mb-3 ${option.Correct ? 'is-success' : 'is-warning is-light' }`} 
+             className={`isSelectable notification p-2 mb-3 ${option.Correct ? 'is-success' : 'is-warning is-light' }`} 
              onClick={()=>handleSelectedOption(option)}
              key={option.IDOption}
            >

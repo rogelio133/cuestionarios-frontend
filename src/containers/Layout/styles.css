@@ -80,8 +80,16 @@
   }
 }
 
+.elContenedor {
+  height: 100%;
+}
+
 .contenedor {
   height: 100%;
   display: grid;
   grid-template-rows: 60px auto 60px;
+}
+
+.isSelectable:hover {
+  cursor: pointer;
 }

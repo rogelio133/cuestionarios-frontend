@@ -122,7 +122,7 @@ const Layout = (props) =>{
               <p className="modal-card-title">Aviso</p>
             </header>
             <section className="modal-card-body">
-              { wsError ? "No se pudo procesar su solicitud, intente nuevamente" : "Su sesión ha expirado" }
+              { wsError || "Su sesión ha expirado" }
             </section>
             <footer className="modal-card-foot">
               <button type="button" onClick={handleRedirect} className="button is-success">Aceptar</button>

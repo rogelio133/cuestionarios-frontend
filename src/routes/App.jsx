@@ -26,7 +26,7 @@ const App = () =>{
        wsError={wsError}
        invalidToken={invalidToken}
      >
-       <Router>
+       <Router className="elContenedor">
          <Home path="/" />
          <Form path="/questionnaire" />
       

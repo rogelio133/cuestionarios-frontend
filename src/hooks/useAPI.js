@@ -9,7 +9,7 @@ const useAPI = () =>{
 
 
     const wsGetQuestionnaire = async (code) => {
-        let info = null;
+        let info = {};
         try {
             const parameters = { code };
             const respuesta = await callMethod('GetQuestionnaire', parameters);
@@ -27,7 +27,7 @@ const useAPI = () =>{
             
         } catch (error) {
       
-          setWsError(true);
+          setWsError(error.message);
           console.error(error);
         }
 
@@ -83,11 +83,11 @@ const useAPI = () =>{
         return info;
     }
 
-    const wsSaveQuestionnaire = async (questionnaire) => {
+    const wsSaveQuestionnaire = async (exam) => {
         let info = null;
         try {
       
-            const parameters = {questionnaire};
+            const parameters = {exam};
             const respuesta = await callMethod('SaveQuestionnaire', parameters);
             const { d: { Success, Message,Data,TokenOK } } = respuesta;
       
@@ -110,20 +110,20 @@ const useAPI = () =>{
         return info;
     }
 
-    const wsSaveQuestionnaireAnswer = async (answer) => {
+    const wsSaveQuestionnaireAnswer = async (code, exam) => {
         let info = null;
         try {
       
-            const parameters = {answer};
+            const parameters = {code, exam};
             const respuesta = await callMethod('SaveQuestionnaireAnswer', parameters,true);
-            const { d: { Success, Message } } = respuesta;
+            const { d: { Success, Message,Data} } = respuesta;
       
             if (!Success) {
                 throw new Error(Message);
             }
            
             else {
-                info=  true;
+                info=  Data;
             }
             
         } catch (error) {
@@ -154,6 +154,20 @@ const useAPI = () =>{
         return info;
     }
 
+    const wsValidateLogin = async (user, password) => {
+        let info = null;
+        try {
+            const parameters = { user, password };
+            const response = await callMethod('ValidateLogin', parameters,true);
+            info = response;
+            
+        } catch (error) {
+          console.error(error);
+        }
+
+        return info;
+    }
+
 
     const callMethod = async( method, parameters, isPublic) =>{
         if(!isPublic) {
@@ -165,13 +179,13 @@ const useAPI = () =>{
     }
 
     return {
-       
         wsGetQuestionnaire,
         wsGetQuestionnaireByToken,
         wsGetQuestionnaires,
         wsSaveQuestionnaire,
         wsSaveQuestionnaireAnswer,
-        wsValidateCode
+        wsValidateCode,
+        wsValidateLogin
     };
 
 }
