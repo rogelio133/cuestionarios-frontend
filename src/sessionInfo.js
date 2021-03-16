@@ -1,9 +1,7 @@
-const sessionInfo= () => {
-    const session = JSON.parse(window.sessionStorage.getItem('token'));
+export const sessionInfo = () => {
+  const session = JSON.parse(window.sessionStorage.getItem('token'))
 
-    const {name,lastName,token } = session;
+  const { name, token } = session
 
-    return {name , lastName, token };
+  return { name, token }
 }
-
-export default sessionInfo;

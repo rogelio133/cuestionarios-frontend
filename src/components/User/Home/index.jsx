@@ -1,36 +1,32 @@
-import React, { Fragment } from 'react';
-import { Link  } from '@reach/router';
-import  sessionInfos  from '../../../sessionInfo';
+import React from 'react'
+import { Link } from '@reach/router'
+import { sessionInfo } from '../../../sessionInfo'
+import { Article } from '../../Widgets/Article/index'
 
+export const UserHome = () => {
+  const { name } = sessionInfo()
 
+  return (
+    <Article title='Mi cuenta'>
+      <h2 className='title is-21'>{`Hola ${name}`}</h2>
+      <div className='block'>
 
-const UserHome = () => {
+        <Link className='button is-success' to='/user/questionnaires'>
+          <span className='icon is-small'>
+            <i className='fas fa-list' />
+          </span>
+          <span><strong>Mis cuestionarios</strong></span>
+        </Link>
 
-
-  const {name } = sessionInfos();
-
-return(
-  <>
-    <h1 className="title is-1">{`Hola ${name}`}</h1>
-    <div className="block">
-
-      <Link className="button is-success" to="/user/questionnaires">
-        <span className="icon is-small">
-          <i className="fas fa-list" />
-        </span>
-        <span>Mis cuestionarios</span>
-      </Link>
-
-    </div>
-    <div className="block">
-      <Link className="button is-info" to="/user/questionnaires/new">
-        <span className="icon is-small">
-          <i className="fas fa-plus" />
-        </span>
-        <span>Crear cuestionario</span>
-      </Link>
-    </div>
-  </>
-    )
-  }
-export default UserHome;
+      </div>
+      <div className='block'>
+        <Link className='button is-primary' to='/user/questionnaires/new'>
+          <span className='icon is-small'>
+            <i className='fas fa-plus' />
+          </span>
+          <span><strong>Crear cuestionario</strong></span>
+        </Link>
+      </div>
+    </Article>
+  )
+}

@@ -82,6 +82,8 @@
 
 .elContenedor {
   height: 100%;
+  max-width: 1367px;
+  margin: 0 auto;
 }
 
 .contenedor {
