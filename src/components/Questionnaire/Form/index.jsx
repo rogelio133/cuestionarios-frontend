@@ -1,9 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react'
+import { Link } from '@reach/router'
 import NProgress from 'nprogress'
 import { CenteredContainer } from '../../../GlobalStyles'
 import { useAPI } from '../../../hooks/useAPI'
 import { Question } from '../Question/index'
 import { Article } from '../../Widgets/Article/index'
+import { Message } from '../../Widgets/Message/index'
+import { rulesEmpty } from '../../../utils'
 
 export const Form = ({ isAuth }) => {
   const _stepValidatingCode = 1
@@ -40,19 +43,26 @@ export const Form = ({ isAuth }) => {
   const handleGettingUserData = () => {
     const _name = nameRef.current.value
 
-    setCurrentQuestion(questionnaire.Questions[questionIndex])
-    setErrormessage(!_name ? 'Requerido' : '')
-    setStartDate(_name ? new Date() : null)
-    setName(_name)
-    setStep(_name ? _stepAnswering : _stepGettingUserData)
+    if (rulesEmpty(_name)) {
+      setErrormessage('Requerido')
+    } else {
+      setCurrentQuestion(questionnaire.Questions[questionIndex])
+      setErrormessage('')
+      setStartDate(_name ? new Date() : null)
+      setName(_name)
+      setStep(_name ? _stepAnswering : _stepGettingUserData)
+    }
   }
 
   const handleSearchCode = async () => {
     const code = coderef.current.value
 
-    setErrormessage(!code ? 'Requerido' : '')
-
-    if (code.length >= 5) {
+    if (rulesEmpty(code)) {
+      setErrormessage('Requerido')
+    } else if (code.length < 6) {
+      setErrormessage('La longitud del código debe de ser de 6 caracteres')
+    } else {
+      setErrormessage('')
       isLoading(true)
       const questionnaire = await wsValidateCode(code)
       isLoading(false)
@@ -147,7 +157,7 @@ export const Form = ({ isAuth }) => {
               <div className='field'>
                 <label className='label'>¿Cual es tu nombre?</label>
                 <div className='control'>
-                  <input className={`input is-large ${errorMessage && 'is-danger'}`} type='text' ref={nameRef} maxLength={100} placeholder='Especifica tu nombre' />
+                  <input className={`input is-large ${errorMessage && 'is-danger'}`} type='text' ref={nameRef} maxLength={150} placeholder='Especifica tu nombre' />
                 </div>
                 {errorMessage && <p className='help is-danger'>{errorMessage}</p>}
               </div>
@@ -232,7 +242,7 @@ export const Form = ({ isAuth }) => {
                   Puedes crear una cuenta o si ya cuentas con una, puedes iniciar sesión para crear y compartir cuestionarios.
                 </p>
                 <div className='has-text-centered mt-6 mb-4'>
-                  <button type='button' className='button is-medium is-info'><strong>Conocer más</strong></button>
+                  <Link className='button is-medium is-info' to='/'><strong>Conocer más</strong></Link>
                 </div>
               </>}
           </Article>
@@ -240,7 +250,13 @@ export const Form = ({ isAuth }) => {
       }
       {
         step == _stepErrorSaving &&
-          <div>error al guardar (en construcción)</div>
+          <Message
+            description='Ocurrió un problema al procesar su solicitud'
+          >
+            <div className='has-text-centered mt-6 mb-4'>
+              <Link className='button is-medium is-info' to='/'><strong>Aceptar</strong></Link>
+            </div>
+          </Message>
       }
     </>
   )

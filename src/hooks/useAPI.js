@@ -6,10 +6,10 @@ import { fetchData } from '../utils'
 export const useAPI = () => {
   const { urlWs, setWsError, setInvalidToken } = useContext(Context)
 
-  const wsCreateAccount = async (user, password) => {
+  const wsCreateAccount = async (name, username, password) => {
     let info = null
     try {
-      const parameters = { user, password }
+      const parameters = { name, username, password }
       const response = await callMethod('CreateAccount', parameters, true)
       info = response
     } catch (error) {
@@ -165,6 +165,7 @@ export const useAPI = () => {
   }
 
   return {
+    wsCreateAccount,
     wsGetQuestionnaire,
     wsGetQuestionnaireByToken,
     wsGetQuestionnaires,

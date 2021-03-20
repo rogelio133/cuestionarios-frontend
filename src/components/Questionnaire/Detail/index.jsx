@@ -15,8 +15,7 @@ export const QuestionnaireDetail = ({ detailId }) => {
   const [tabs, setTabs] = useState([
     { id: 1, icon: 'ticket-alt', title: 'Código', active: true },
     { id: 2, icon: 'list', title: 'Preguntas', active: false },
-    { id: 3, icon: 'clipboard-check', title: 'Respuestas', active: false },
-    { id: 4, icon: 'chart-pie', title: 'Estadisticas', active: false }
+    { id: 3, icon: 'clipboard-check', title: 'Respuestas', active: false }
   ])
 
   const tabCode = (
@@ -36,7 +35,6 @@ export const QuestionnaireDetail = ({ detailId }) => {
     if (tabs[0].active) { return tabCode }
     if (tabs[1].active) { return <ListOfQuestions questions={questionnaire.Questions} /> }
     if (tabs[2].active) { return questionnaire.Exams.length > 0 ? <ListOfAnswers answers={questionnaire.Exams} /> : tabWithoutAnswes }
-    return <div>no esta</div>
   }
 
   const GetQuestionnaire = async () => {

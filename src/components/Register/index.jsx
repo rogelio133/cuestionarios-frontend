@@ -11,15 +11,16 @@ export const Register = () => {
   const { wsCreateAccount } = useAPI()
 
   const [loading, setLoading] = useState(false)
-  const [state, setState] = useState({ usernameError: '', passwordError: '', passwordConfirmError: '', formError: '' })
+  const [state, setState] = useState({ nameError: '', usernameError: '', passwordError: '', passwordConfirmError: '', formError: '' })
 
+  const nameRef = useRef('')
   const usernameRef = useRef('')
   const passwordRef = useRef('')
   const passwordConfirmRef = useRef('')
 
-  const CreateAccount = async (user, password) => {
+  const CreateAccount = async (name, user, password) => {
     setLoading(true)
-    const response = await wsCreateAccount(user, password)
+    const response = await wsCreateAccount(name, user, password)
     setLoading(false)
 
     if (!response) {
@@ -38,14 +39,19 @@ export const Register = () => {
   }
 
   const validateForm = () => {
+    let nameError = ''
     let usernameError = ''
     let passwordError = ''
     let passwordConfirmError = ''
 
+    const name = nameRef.current.value
     const username = usernameRef.current.value
     const password = passwordRef.current.value
     const passwordConfirm = passwordConfirmRef.current.value
 
+    if (rulesEmpty(name)) {
+      nameError = 'Requerido'
+    }
     if (rulesEmpty(username)) {
       usernameError = 'Requerido'
     } else if (!rulesEmail(username)) {
@@ -61,12 +67,12 @@ export const Register = () => {
       passwordConfirmError = 'El password no coincide con la confirmación'
     }
 
-    const formOK = !usernameError && !passwordError && !passwordConfirmError
+    const formOK = !nameError && !usernameError && !passwordError && !passwordConfirmError
 
-    setState({ usernameError, passwordError, passwordConfirmError, formError: '' })
+    setState({ nameError, usernameError, passwordError, passwordConfirmError, formError: '' })
 
     if (formOK) {
-      CreateAccount(username, password)
+      CreateAccount(name, username, password)
     }
   }
 
@@ -74,6 +80,13 @@ export const Register = () => {
     <CenteredContainer>
       <form className='box column is-one-third'>
         <h1 className='title is-1 has-text-centered'>Registro</h1>
+        <div className='field'>
+          <label className='label'>Nombre</label>
+          <div className='control'>
+            <input className={`input ${state.nameError && 'is-danger'}`} type='email' disabled={loading} ref={nameRef} defaultValue='Rogelio haterz' />
+          </div>
+          {state.nameError && <p className='help is-danger'>{state.nameError}</p>}
+        </div>
         <div className='field'>
           <label className='label'>Email</label>
           <div className='control'>
@@ -100,7 +113,7 @@ export const Register = () => {
         </div>
         <div className='field'>
           <label className='label'>Confirma Password</label>
-          <div className='control has-icons-right '>
+          <div className='control'>
             <input
               className={`input ${state.passwordConfirmError && 'is-danger'}`}
               type='password'
@@ -111,9 +124,6 @@ export const Register = () => {
               onCopy={handleChange}
               onPaste={handleChange}
             />
-            <span class='icon is-small is-right is-clickable'>
-              <i class='fas fa-eye' />
-            </span>
           </div>
           {state.passwordConfirmError && <p className='help is-danger'>{state.passwordConfirmError}</p>}
         </div>

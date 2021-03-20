@@ -3,6 +3,7 @@ import { Link, navigate } from '@reach/router'
 import { ListOfQuestions } from '../ListOfQuestions/index'
 import { useAPI } from '../../../hooks/useAPI'
 import { Article } from '../../Widgets/Article/index'
+import { rulesEmpty } from '../../../utils'
 
 export const NewQuestionary = () => {
   const questionaryRef = useRef('')
@@ -23,18 +24,21 @@ export const NewQuestionary = () => {
   })
 
   const addOption = () => {
-    if (optionRef.current.value) {
+    const option = optionRef.current.value
+    if (!rulesEmpty(option) && options.length < 3) {
       const max = options.length == 0 ? null : options.reduce((prev, current) => (prev.IDOption > current.IDOption) ? prev : current)
       const IDOption = max == null ? 1 : (max.IDOption + 1)
 
-      setOptions((prevOptions) => ([...prevOptions, { IDOption, Name: optionRef.current.value, Correct: false }]))
-      setState((prevState) => ({ ...prevState, errorOptions: false }))
+      setOptions((prevOptions) => ([...prevOptions, { IDOption, Name: option, Correct: false }]))
+      setState((prevState) => ({ ...prevState, errorOptions: '' }))
 
       optionRef.current.value = ''
     }
   }
 
   const addQuestion = () => {
+    const question = questionRef.current.value
+
     let _OptionsOK = ''
     let _QuestionOK = true
 
@@ -44,7 +48,7 @@ export const NewQuestionary = () => {
       _OptionsOK = 'Debe de especificar la opción correcta'
     }
 
-    if (!questionRef.current.value) {
+    if (rulesEmpty(question)) {
       _QuestionOK = false
     }
 
@@ -54,7 +58,7 @@ export const NewQuestionary = () => {
       const max = questions.length == 0 ? null : questions.reduce((prev, current) => (prev.IDQuestion > current.IDQuestion) ? prev : current)
       const IDQuestion = max == null ? 1 : (max.IDQuestion + 1)
 
-      setQuestions((prevQuestions) => ([...prevQuestions, { IDQuestion, Name: questionRef.current.value, Options: options }]))
+      setQuestions((prevQuestions) => ([...prevQuestions, { IDQuestion, Name: question, Options: options }]))
       setOptions([])
 
       questionRef.current.value = ''
@@ -66,10 +70,11 @@ export const NewQuestionary = () => {
   }
 
   const confirmQuestionnaire = () => {
+    const questionary = questionaryRef.current.value
     let _QuestionaryOK = true
     let _QuestionOK = ''
 
-    if (!questionaryRef.current.value) {
+    if (rulesEmpty(questionary)) {
       _QuestionaryOK = false
     }
     if (questions.length < 1) {
