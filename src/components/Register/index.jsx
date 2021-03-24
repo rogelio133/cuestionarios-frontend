@@ -1,6 +1,6 @@
 import React, { useState, useRef, useContext } from 'react'
 import { Link } from '@reach/router'
-import { rulesEmail, rulesEmpty } from '../../utils'
+import { rulesEmail, rulesEmpty, handleOnEnter } from '../../utils'
 import { Context } from '../../Context'
 import { useAPI } from '../../hooks/useAPI'
 import { CenteredContainer } from '../../GlobalStyles'
@@ -78,19 +78,31 @@ export const Register = () => {
 
   return (
     <CenteredContainer>
-      <form className='box column is-one-third'>
+      <form className='box column is-two-fifths'>
         <h1 className='title is-1 has-text-centered'>Registro</h1>
         <div className='field'>
           <label className='label'>Nombre</label>
           <div className='control'>
-            <input className={`input ${state.nameError && 'is-danger'}`} type='email' disabled={loading} ref={nameRef} defaultValue='Rogelio haterz' />
+            <input
+              className={`input ${state.nameError && 'is-danger'}`}
+              type='email'
+              disabled={loading}
+              ref={nameRef}
+              onKeyDown={(event) => handleOnEnter(event, validateForm)}
+            />
           </div>
           {state.nameError && <p className='help is-danger'>{state.nameError}</p>}
         </div>
         <div className='field'>
           <label className='label'>Email</label>
           <div className='control'>
-            <input className={`input ${state.usernameError && 'is-danger'}`} type='email' disabled={loading} ref={usernameRef} defaultValue='rogelio_133@outlook.com' />
+            <input
+              className={`input ${state.usernameError && 'is-danger'}`}
+              type='email'
+              disabled={loading}
+              ref={usernameRef}
+              onKeyDown={(event) => handleOnEnter(event, validateForm)}
+            />
           </div>
           {state.usernameError && <p className='help is-danger'>{state.usernameError}</p>}
         </div>
@@ -103,10 +115,10 @@ export const Register = () => {
               type='password'
               disabled={loading}
               ref={passwordRef}
-              defaultValue='123'
               onCut={handleChange}
               onCopy={handleChange}
               onPaste={handleChange}
+              onKeyDown={(event) => handleOnEnter(event, validateForm)}
             />
           </div>
           {state.passwordError && <p className='help is-danger'>{state.passwordError}</p>}
@@ -119,10 +131,10 @@ export const Register = () => {
               type='password'
               disabled={loading}
               ref={passwordConfirmRef}
-              defaultValue='123'
               onCut={handleChange}
               onCopy={handleChange}
               onPaste={handleChange}
+              onKeyDown={(event) => handleOnEnter(event, validateForm)}
             />
           </div>
           {state.passwordConfirmError && <p className='help is-danger'>{state.passwordConfirmError}</p>}

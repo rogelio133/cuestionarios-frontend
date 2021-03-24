@@ -20,7 +20,12 @@ export const QuestionnaireDetail = ({ detailId }) => {
 
   const tabCode = (
     <>
-      <h4 className='title is-4 has-text-centered'>Comparte el siguiente codigo a las personas que quieras que contesten el cuestionario</h4>
+      <h4 className='title is-4 has-text-centered'>
+        Para que contesten tu cuestionario,las personas deben de entrar a <br /><br />
+        <a target='_blank' rel='noreferrer' href='http://cuestionarios.rogeliope.com/questionnaire'>cuestionarios.rogeliope.com/questionnaire</a><br /><br />
+        y utilizar el siguiente código :
+      </h4>
+
       <h1 className='title is-1 has-text-centered'>{questionnaire.Code}</h1>
     </>
   )

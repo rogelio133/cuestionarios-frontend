@@ -19,6 +19,28 @@ export const useAPI = () => {
     return info
   }
 
+  const wsGetDetailAnswer = async (IDExam) => {
+    let info = null
+    try {
+      const parameters = { IDExam }
+      const respuesta = await callMethod('GetDetailAnswer', parameters)
+      const { d: { Success, Message, Data, TokenOK } } = respuesta
+
+      if (!Success) {
+        throw new Error(Message)
+      } else if (!TokenOK) {
+        setInvalidToken(true)
+      } else {
+        info = Data
+      }
+    } catch (error) {
+      setWsError(true)
+      console.error(error)
+    }
+
+    return info
+  }
+
   const wsGetQuestionnaire = async (code) => {
     let info = {}
     try {
@@ -166,6 +188,7 @@ export const useAPI = () => {
 
   return {
     wsCreateAccount,
+    wsGetDetailAnswer,
     wsGetQuestionnaire,
     wsGetQuestionnaireByToken,
     wsGetQuestionnaires,

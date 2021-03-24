@@ -6,7 +6,8 @@ import { useAPI } from '../../../hooks/useAPI'
 import { Question } from '../Question/index'
 import { Article } from '../../Widgets/Article/index'
 import { Message } from '../../Widgets/Message/index'
-import { rulesEmpty } from '../../../utils'
+import { ListOfUserAnswers } from './ListOfUserAnswers/index'
+import { rulesEmpty, handleOnEnter } from '../../../utils'
 
 export const Form = ({ isAuth }) => {
   const _stepValidatingCode = 1
@@ -28,6 +29,7 @@ export const Form = ({ isAuth }) => {
   const [selectedOption, setSelectedOption] = useState({ selected: false, ID: 0 })
   const [answers, setAnswers] = useState([])
   const [stats, setStats] = useState([])
+  const [userQuestions, setUserQuestions] = useState([])
   const [isLastQuestion, setIsLastQuestion] = useState(false)
 
   const coderef = useRef('')
@@ -89,11 +91,15 @@ export const Form = ({ isAuth }) => {
     }
 
     isLoading(true)
-    const stats = await wsSaveQuestionnaireAnswer(questionnaire.Code, questionnaireAnswer)
+    const result = await wsSaveQuestionnaireAnswer(questionnaire.Code, questionnaireAnswer)
     isLoading(false)
 
-    setStats(stats)
-    setStep(stats ? _stepAnswersSaved : _stepErrorSaving)
+    if (result) {
+      setStats(result.stats)
+      setUserQuestions(result.userQuestions)
+    }
+
+    setStep(result ? _stepAnswersSaved : _stepErrorSaving)
   }
 
   const handleSetNextQuestion = () => {
@@ -127,7 +133,7 @@ export const Form = ({ isAuth }) => {
                     ref={coderef}
                     disabled={loading}
                     maxLength={6}
-                    defaultValue='VvEA35'
+                    onKeyDown={(event) => handleOnEnter(event, handleSearchCode)}
                   />
                 </div>
                 <div className='control'>
@@ -157,7 +163,14 @@ export const Form = ({ isAuth }) => {
               <div className='field'>
                 <label className='label'>¿Cual es tu nombre?</label>
                 <div className='control'>
-                  <input className={`input is-large ${errorMessage && 'is-danger'}`} type='text' ref={nameRef} maxLength={150} placeholder='Especifica tu nombre' />
+                  <input
+                    className={`input is-large ${errorMessage && 'is-danger'}`}
+                    type='text'
+                    ref={nameRef}
+                    maxLength={150}
+                    placeholder='Especifica tu nombre'
+                    onKeyDown={(event) => handleOnEnter(event, handleGettingUserData)}
+                  />
                 </div>
                 {errorMessage && <p className='help is-danger'>{errorMessage}</p>}
               </div>
@@ -234,12 +247,13 @@ export const Form = ({ isAuth }) => {
               }
 
             </nav>
+            <ListOfUserAnswers questions={userQuestions} />
             {!isAuth &&
               <>
                 <p className='is-size-5'>
                   ¿Te gustó este cuestionario?, ¿Te gustaria crear tus propios cuestionarios para compartirlos con tus amigos?.
                   <br />
-                  Puedes crear una cuenta o si ya cuentas con una, puedes iniciar sesión para crear y compartir cuestionarios.
+                  Puedes <Link to='/register'>crear una cuenta</Link> o si ya cuentas con una, puedes <Link to='/login'>iniciar sesión</Link>
                 </p>
                 <div className='has-text-centered mt-6 mb-4'>
                   <Link className='button is-medium is-info' to='/'><strong>Conocer más</strong></Link>

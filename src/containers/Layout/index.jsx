@@ -40,6 +40,7 @@ export const Layout = (props) => {
 
             <div className='navbar-item'>
               <div className='buttons'>
+                <Link className='button is-success is-inverted' to='/questionnaire'>Tengo un código de cuestionario</Link>
                 {
                   isAuth && (
                     <a className='button is-info is-light' onClick={() => { navigate('/user'); handleMenuClick() }}>

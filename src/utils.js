@@ -1,3 +1,8 @@
+export const handleOnEnter = (e, method) => {
+  if (e.key === 'Enter') {
+    method()
+  }
+}
 export const fetchData = (urlAPI, parameters) => new Promise((resolve, reject) => {
   const xhttp = new XMLHttpRequest()
   xhttp.open('POST', urlAPI, true)

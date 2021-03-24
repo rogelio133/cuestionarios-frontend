@@ -10,7 +10,6 @@ const Provider = ({ children, urlWS }) => {
   const value = {
     urlWs: urlWS,
     isAuth,
-
     wsError,
     invalidToken,
     setWsError,

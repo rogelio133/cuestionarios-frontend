@@ -3,7 +3,7 @@ import { Link, navigate } from '@reach/router'
 import { ListOfQuestions } from '../ListOfQuestions/index'
 import { useAPI } from '../../../hooks/useAPI'
 import { Article } from '../../Widgets/Article/index'
-import { rulesEmpty } from '../../../utils'
+import { rulesEmpty, handleOnEnter } from '../../../utils'
 
 export const NewQuestionary = () => {
   const questionaryRef = useRef('')
@@ -135,7 +135,14 @@ export const NewQuestionary = () => {
     <Article title='Nuevo cuestionario'>
       <div className='field  '>
         <div className='control  '>
-          <input type='text' className={`input ${state.errorQuestionary && 'is-danger'}`} ref={questionaryRef} placeholder='Nombre del cuestionario' maxLength={50} />
+          <input
+            type='text'
+            className={`input ${state.errorQuestionary && 'is-danger'}`}
+            ref={questionaryRef}
+            placeholder='Nombre del cuestionario'
+            maxLength={50}
+            onKeyDown={(event) => handleOnEnter(event, confirmQuestionnaire)}
+          />
           {
             state.errorQuestionary &&
               <p className='help is-danger'>Requerido</p>
@@ -163,7 +170,13 @@ export const NewQuestionary = () => {
       >
         <div className='field is-grouped'>
           <div className='control is-expanded'>
-            <input type='text' className={`input ${state.errorQuestion ? 'is-danger' : ''}`} ref={questionRef} placeholder='Descripción de la pregunta' />
+            <input
+              type='text'
+              className={`input ${state.errorQuestion ? 'is-danger' : ''}`}
+              ref={questionRef}
+              placeholder='Descripción de la pregunta'
+              onKeyDown={(event) => handleOnEnter(event, addQuestion)}
+            />
             {
               state.errorQuestion &&
                 <p className='help is-danger'>Requerido</p>
@@ -181,7 +194,13 @@ export const NewQuestionary = () => {
         <div className='box'>
           <div className='field is-grouped'>
             <p className='control is-expanded'>
-              <input type='text' className='input' ref={optionRef} onKeyDown={handleKeyDownOption} placeholder='Descripción de la opción' />
+              <input
+                type='text'
+                className='input'
+                ref={optionRef}
+                onKeyDown={(event) => handleOnEnter(event, addOption)}
+                placeholder='Descripción de la opción'
+              />
             </p>
             <p className='control'>
               <a
