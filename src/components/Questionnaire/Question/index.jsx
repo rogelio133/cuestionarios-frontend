@@ -1,6 +1,11 @@
 import React from 'react'
 
 export const Question = (props) => {
+  const getOptionLetter = (index) => {
+    if (index == 0) { return 'A' }
+    if (index == 1) { return 'B' }
+    return 'C'
+  }
   const handleSelectedOption = (option) => {
     props.handleOptionSelected(option.IDOption)
 
@@ -19,14 +24,14 @@ export const Question = (props) => {
         {`${props.number}.- ${props.question.Name}`}
       </h4>
       {
-        props.question.Options.map((option) => (
+        props.question.Options.map((option, index) => (
           <div
             className={`isSelectable notification p-2 mb-3 ${option.Correct ? 'is-success' : 'is-warning is-light'}`}
             onClick={() => handleSelectedOption(option)}
             key={option.IDOption}
           >
             <label className='is-size-5'>
-              <b className='mr-2'>A)</b>
+              <b className='mr-2'>{getOptionLetter(index)})</b>
               {option.Name}
             </label>
           </div>
