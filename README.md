@@ -12,3 +12,18 @@ La aplicación esta construida con React.js y se utilizó el framework de css <a
 ### Backend :
 
 El repositorio del backend de esta aplicación se puede consultar en <a href="https://github.com/rogelio133/cuestionarios-backend" target="_blank">https://github.com/rogelio133/cuestionarios-backend</a>
+
+### Screenshots :
+
+![screenshot 01](https://github.com/rogelio133/cuestionarios-frontend/blob/main/screenshots/01.png)
+
+![screenshot 02](https://github.com/rogelio133/cuestionarios-frontend/blob/main/screenshots/02.png)
+
+![screenshot 03](https://github.com/rogelio133/cuestionarios-frontend/blob/main/screenshots/03.png)
+
+![screenshot 04](https://github.com/rogelio133/cuestionarios-frontend/blob/main/screenshots/04.png)
+
+![screenshot 05](https://github.com/rogelio133/cuestionarios-frontend/blob/main/screenshots/05.png)
+
+![screenshot 06](https://github.com/rogelio133/cuestionarios-frontend/blob/main/screenshots/06.png)
+
